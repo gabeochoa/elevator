@@ -15,12 +15,11 @@ public class Shaft
         transport = tr;
     }
 
-    public void update()
+    public void update(float deltaTime)
     {
-        transport.update();
+        transport.update(deltaTime);
     }
-
-
+	
     public static Shaft createEmptyShaft()
     {
         Shaft s = new Shaft(ShaftType.EMPTY, new EmptyShaft());

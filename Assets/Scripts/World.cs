@@ -33,7 +33,7 @@ public class World
         graph = new Graph(this);
     }
 
-    public void update()
+    public void update(float deltaTime)
     {
         Console.WriteLine("update");
           /*  
@@ -45,7 +45,7 @@ public class World
             }
         }
         */
-        building.update();
+        building.update(deltaTime);
     }
 
     public Tile getTiles(int x, int y)

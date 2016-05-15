@@ -13,6 +13,6 @@ public class WorldController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		world.update ();
+		world.update (Time.deltaTime);
 	}
 }

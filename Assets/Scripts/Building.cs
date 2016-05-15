@@ -24,6 +24,7 @@ public class Building
 
         shafts = new List<Shaft>();
 		addShaft (0, Shaft.createEmptyShaft());
+		addShaft (2, Shaft.createElevatorShaft());
 		addShaft (World.world.WIDTH-1, Shaft.createElevatorShaft());
         
         customers = new List<Customer>();
@@ -45,7 +46,7 @@ public class Building
 
 	public void addShaft(int width, Shaft sa)
 	{
-		Tile t = World.world.tiles [0, 0];
+		Tile t = World.world.tiles [width, 0];
 		t.addToTile (sa.transport);
 		sa.transport.tile = t;
 		shafts.Add(sa);
@@ -59,11 +60,11 @@ public class Building
 		}
 	}
 
-    public void update()
+    public void update(float deltaTime)
     {
         foreach(Shaft s in shafts)
         {
-            s.update();
+            s.update(deltaTime);
         }
         foreach(Customer c in customers)
         {

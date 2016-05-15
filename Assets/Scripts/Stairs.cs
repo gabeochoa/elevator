@@ -18,5 +18,5 @@ public class Stairs : Transportation
             arrivedCB(-1);
         }
     }
-    override public void update(){}
+    override public void update(float deltaTime){}
 }

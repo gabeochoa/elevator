@@ -14,11 +14,11 @@ public abstract class Transportation
 
 
     public Tile tile;
-
+	public string name;
     protected Action<int> arrivedCB;
 
     public abstract void arrived();
-    public abstract void update();
+    public abstract void update(float deltaTime);
 
     public void registerArrivedCB(Action<int> reg)
     {

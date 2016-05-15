@@ -14,5 +14,5 @@ public class EmptyShaft : Transportation
     }
 
     override public void arrived(){}
-    override public void update(){}
+    override public void update(float deltaTime){}
 }
