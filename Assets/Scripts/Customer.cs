@@ -10,7 +10,7 @@ public class Customer
     public Tile tile;
     public bool ontransport;
     Transportation curTransport;
-    PathFind path;
+    public PathFind path;
     Tile nextTile;
     float movement = 0;
 	public string name = "";
@@ -73,7 +73,7 @@ public class Customer
         }
         
         float dis = (float) Math.Sqrt(Math.Pow(tile.x - nextTile.x, 2) + Math.Pow(tile.y - nextTile.y, 2));
-        float distFrame = 1/1;//should be divided by deltaTime;
+        float distFrame = 1/1f;//should be divided by deltaTime;
         float perc = distFrame / dis;
         movement += perc;
 

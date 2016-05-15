@@ -19,27 +19,45 @@ public class Building
 
 		for (int i = 0; i < World.world.HEIGHT; i++) 
 		{
-			Floor a = Floor.createEmptyFloor ();
-			World.world.tiles [1, i].atLocation.Add (a);
-			a.tile = World.world.tiles [1, i];
-			floors.Add (a);
+			addFloor (i);
 		}
 
         shafts = new List<Shaft>();
-        Shaft sa = Shaft.createEmptyShaft();
-        Shaft sb = Shaft.createElevatorShaft();
-
-        World.world.tiles[0,0].atLocation.Add(sa.transport);
-        World.world.tiles[2,0].atLocation.Add(sb.transport);
-        sa.transport.tile = World.world.tiles[0,0];
-        sb.transport.tile = World.world.tiles[2,0];
-
-        shafts.Add(sa);
-        shafts.Add(sb);
+		addShaft (0, Shaft.createEmptyShaft());
+		addShaft (World.world.WIDTH-1, Shaft.createElevatorShaft());
         
         customers = new List<Customer>();
         customers.Add(generateRandomCust());
     }
+
+	public void addFloor(int height)
+	{
+		Floor a = Floor.createEmptyFloor ();
+		for (int j = 0; j < World.world.WIDTH; j++)
+		{
+			Tile t = World.world.tiles [j, height];
+			if (t.isShaft)
+				continue;
+			t.addToTile (a);
+		}
+		floors.Add (a);
+	}
+
+	public void addShaft(int width, Shaft sa)
+	{
+		Tile t = World.world.tiles [0, 0];
+		t.addToTile (sa.transport);
+		sa.transport.tile = t;
+		shafts.Add(sa);
+
+		for (int i = 0; i < World.world.HEIGHT; i++)
+		{
+			t = World.world.tiles [width, i];
+			t.isFloor = false;
+			t.isShaft = true;
+			t.removeFromTile ("Floor");
+		}
+	}
 
     public void update()
     {
@@ -58,7 +76,7 @@ public class Building
         Random rnd = new Random();
         int month = rnd.Next(1, floors.Count-1) + 1;
         Customer c = new Customer(World.world.tiles[1, month], 10f);
-        World.world.tiles[0,0].atLocation.Add(c);
+		World.world.tiles[0,0].addToTile(c);
         c.tile =  World.world.tiles[0,0];
         return c;
     }  

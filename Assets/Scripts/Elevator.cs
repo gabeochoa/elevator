@@ -36,10 +36,9 @@ public class Elevator : Transportation
     
         curFloor = floors[index];
         Console.WriteLine("elevator: " + curFloor);
-        tile.atLocation.Remove(this);
+		tile.removeFromTile(this);
         tile = World.world.tiles[tile.x, curFloor];
-        tile.atLocation.Add(this);
-
+		tile.addToTile(this);
     }
 
     public int[] getFloors()

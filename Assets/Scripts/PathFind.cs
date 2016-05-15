@@ -6,7 +6,7 @@ using Priority_Queue;
 
 public class PathFind                                                                                                                         
 {      
-    Queue<Tile> path;
+    public Queue<Tile> path;
 
     public PathFind(World world, Tile a, Tile b)
     {
