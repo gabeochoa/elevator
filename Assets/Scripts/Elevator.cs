@@ -2,7 +2,6 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-
 public class Elevator : Transportation
 {
     protected int index;
