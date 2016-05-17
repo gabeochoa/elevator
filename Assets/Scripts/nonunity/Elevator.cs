@@ -114,7 +114,6 @@ public class Elevator_new : Transportation_new
 {
     int MAX_PEOPLE = 4;
     int WAIT_TIME = 2;
-
     int currentWait;
 
     public Elevator_new()
@@ -128,7 +127,8 @@ public class Elevator_new : Transportation_new
         numPeople = 0;
         maxPeople = MAX_PEOPLE;
         velocity = 0;
-        //destination;
+
+        destination = World.world.building.floors[0].tile;
     }
 
     public float brakeDist()
@@ -209,7 +209,7 @@ public class Elevator_new : Transportation_new
 
     public override void arrived(int floor)
     {
-        
+
     }
 }
 
