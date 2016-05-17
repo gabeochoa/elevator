@@ -140,8 +140,10 @@ public class Elevator_new : Transportation_new
     public override void update(float deltaTime)
     {
         //hmm
-        velocity = MathUtil.Clamp(velocity, 0, MAX_SPEED);
+        velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
+        up = Math.Sign(velocity) >= 0;
+
         int posdiff = (int) (destination.y - y);
         if(posdiff != 0)
         {
@@ -209,7 +211,11 @@ public class Elevator_new : Transportation_new
 
     public override void arrived(int floor)
     {
+        //do whatever
 
+        //choose next destination
+        floor = up ? floor + 1 : floor - 1;
+        destination = World.world.building.floors[floor].tile;
     }
 }
 
