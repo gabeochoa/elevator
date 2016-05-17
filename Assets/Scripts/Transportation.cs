@@ -11,7 +11,7 @@ public abstract class Transportation
     public int curFloor; //-1 for stairs, 0 for empty?
     protected int baseSpeed;//floors per second
     protected float loadDelay;//embark / disembark delay
-
+	public bool canLoad = false;
 
     public Tile tile;
 	public string name;

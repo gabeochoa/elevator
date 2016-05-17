@@ -10,6 +10,7 @@ public class Elevator : Transportation
     public bool up = false;
 	float updateTime = 1; 
 	Tile nextTile;
+	bool isAtFloor;
 
 	float lerp(float v0, float v1, float t) {
 		return (1-t)*v0 + t*v1;
@@ -36,6 +37,8 @@ public class Elevator : Transportation
         baseSpeed = 3;
         index = 0;
 		nextTile = tile;
+		loadDelay = 2f;
+		isAtFloor = false;
 
 		floors = new List<int> ();
 		for (int i=0; i<World.world.HEIGHT; i++)
@@ -54,30 +57,44 @@ public class Elevator : Transportation
     
     override public void update(float deltaTime)
 	{
-		updateTime -= baseSpeed * deltaTime;
-		if(updateTime < 0)
+		if (!isAtFloor)
 		{
-			if (index > floors.Count - 2 || index <= 0)
+			updateTime -= baseSpeed * deltaTime;
+			if (updateTime < 0)
 			{
-				up = !up;
-			}
-			index = up ? index + 1 : index - 1;
-			curFloor = floors [index];
-			tile.removeFromTile (this);
-			tile = World.world.tiles[tile.x, curFloor];
-			tile.addToTile(this);
-			updateTime = 1f;
-			//Calculate next spot
-			{
-				bool upp = up;
 				if (index > floors.Count - 2 || index <= 0)
 				{
-					upp = !upp;
+					up = !up;
 				}
-				int index2 = upp ? index + 1 : index - 1;
-				int curFloor2 = floors [index2];
-				nextTile = World.world.tiles[tile.x, curFloor2];
+				index = up ? index + 1 : index - 1;
+				curFloor = floors [index];
+				tile.removeFromTile (this);
+				updateTime = 1f;
+				//Calculate next spot
+				{
+					bool upp = up;
+					if (index > floors.Count - 2 || index <= 0)
+					{
+						upp = !upp;
+					}
+					int index2 = upp ? index + 1 : index - 1;
+					int curFloor2 = floors [index2];
+					nextTile = World.world.tiles [tile.x, curFloor2];
+				}
+				isAtFloor = true;
 			}
+		} 
+		else
+		{
+			//allow people to get on
+			loadDelay -= deltaTime;
+			if (loadDelay <= 0)
+			{
+				loadDelay = 2f;
+				isAtFloor = false;
+			}
+			tile = World.world.tiles [tile.x, curFloor];
+			tile.addToTile (this);
 		}
 		Console.WriteLine("elevator: " + curFloor);
     }
