@@ -16,7 +16,7 @@ public class TransportationSpriteController : MonoBehaviour {
 		{
 			if(c.type == Shaft.ShaftType.ELEVATOR)
 			{
-				GameObject obj = (GameObject) Instantiate (ElevatorPrefab, new Vector3 (c.transport.tile.x, c.transport.tile.y, 0), Quaternion.identity);
+				GameObject obj = (GameObject) Instantiate (ElevatorPrefab, new Vector3 (c.transport.x, c.transport.y, 0), Quaternion.identity);
 				obj.transform.parent = this.transform;
 				obj.name = "Elevator" + i;
 				c.transport.name = "Elevator"+i;
@@ -37,7 +37,7 @@ public class TransportationSpriteController : MonoBehaviour {
 			{
 				//Debug.Log (c.name);
 				GameObject elev = GameObject.Find (c.transport.name);
-				elev.transform.position = new Vector3 (c.transport.tile.x, c.transport.tile.y, 0);
+				elev.transform.position = new Vector3 (c.transport.x, c.transport.y, 0);
 			}
 		}
 	}

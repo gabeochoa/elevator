@@ -20,14 +20,15 @@ public class Shaft
         transport.update(deltaTime);
     }
 	
-    public static Shaft createEmptyShaft()
+    public static Shaft createEmptyShaft(Tile t)
     {
         Shaft s = new Shaft(ShaftType.EMPTY, new EmptyShaft());
+        s.transport.setTile(t);
         return s;
     }    
-    public static Shaft createElevatorShaft()
+    public static Shaft createElevatorShaft(Tile t)
     {
-        Shaft s = new Shaft(ShaftType.ELEVATOR, new Elevator());
+        Shaft s = new Shaft(ShaftType.ELEVATOR, new Elevator(t));
         return s;
     }                                                                                                                
 }  

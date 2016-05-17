@@ -23,9 +23,9 @@ public class Building
 		}
 
         shafts = new List<Shaft>();
-		addShaft (0, Shaft.createEmptyShaft());
-		addShaft (2, Shaft.createElevatorShaft());
-		addShaft (World.world.WIDTH-1, Shaft.createElevatorShaft());
+		addShaft (0, Shaft.ShaftType.EMPTY);
+		addShaft (2, Shaft.ShaftType.ELEVATOR);
+		addShaft (World.world.WIDTH-1, Shaft.ShaftType.ELEVATOR);
         
         customers = new List<Customer>();
         customers.Add(generateRandomCust());
@@ -44,11 +44,23 @@ public class Building
 		floors.Add (a);
 	}
 
-	public void addShaft(int width, Shaft sa)
+	public void addShaft(int width, Shaft.ShaftType satype)
 	{
 		Tile t = World.world.tiles [width, 0];
-		t.addToTile (sa.transport);
-		sa.transport.tile = t;
+        Shaft sa = null;
+        switch(satype)
+        {
+            case Shaft.ShaftType.EMPTY:
+                sa = Shaft.createEmptyShaft(t);
+            break;
+            case Shaft.ShaftType.ELEVATOR:
+                sa = Shaft.createElevatorShaft(t);
+            break;
+            default:
+                sa = Shaft.createEmptyShaft(t);
+            break;
+        }
+        t.addToTile (sa.transport);
 		shafts.Add(sa);
 
 		for (int i = 0; i < World.world.HEIGHT; i++)
