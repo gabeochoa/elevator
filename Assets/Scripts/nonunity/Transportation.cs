@@ -2,7 +2,7 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-public abstract class Transportation                                                                                                                         
+public abstract class Transportation_OLD                                                                                                                        
 {                          
     protected int maxPeople;//-1 is infinite, 0 is empty
     protected int curPeople;
@@ -10,7 +10,7 @@ public abstract class Transportation
     protected int baseSpeed;//floors per second
     protected float loadDelay;//embark / disembark delay
     public bool canLoad = false;
-    protected Tile tile;
+    public Tile tile{get; protected set;}
     public string name;
     protected Action<int> arrivedCB;
     public abstract void arrived();
@@ -27,7 +27,7 @@ public abstract class Transportation
 
 }  
 
-public abstract class Transportation_new                                                                                                                        
+public abstract class Transportation                                                                                                                       
 {                          
     protected bool up = true; //false is down
     protected int curFloor; //-1 for stairs, 0 for empty?
@@ -47,8 +47,9 @@ public abstract class Transportation_new
 
     public float x{get; protected set;}
     public float y{get; protected set;}
-    protected Tile tile;
+	protected Tile tile;
     protected Tile destination;
+	public string name;
 
     protected Action changeOccurred;
     public void changeRegisterCallback(Action cb)
@@ -68,6 +69,10 @@ public abstract class Transportation_new
     public abstract void userExited(Customer c);
     public abstract void arrived(int floor);
 
+	public void setTile(Tile t)
+	{
+		tile = t;
+	}
 }  
 
 

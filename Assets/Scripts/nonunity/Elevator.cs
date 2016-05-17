@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class Elevator : Transportation
+public class Elevator_OLD : Transportation_OLD
 {
     protected int index;
     protected List<int> floors; //floors it can reach
@@ -30,7 +30,7 @@ public class Elevator : Transportation
 		} 
 	}
 
-    public Elevator() : base()
+    public Elevator_OLD() : base()
     {
         maxPeople = 11;
         curPeople = 0;
@@ -110,14 +110,15 @@ public class Elevator : Transportation
     }
 }
 
-public class Elevator_new : Transportation_new
+public class Elevator : Transportation
 {
     int MAX_PEOPLE = 4;
     int WAIT_TIME = 2;
     int currentWait;
 
-    public Elevator_new()
+	public Elevator(Tile t)
     {
+		tile = t;
         x = tile.x;
         y = tile.y;
         up = true;
@@ -128,7 +129,7 @@ public class Elevator_new : Transportation_new
         maxPeople = MAX_PEOPLE;
         velocity = 0;
 
-        destination = World.world.building.floors[0].tile;
+		destination = World.world.tiles[(int)x, (int)y+2];
     }
 
     public float brakeDist()

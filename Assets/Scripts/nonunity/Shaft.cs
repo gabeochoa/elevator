@@ -28,8 +28,7 @@ public class Shaft
     }    
     public static Shaft createElevatorShaft(Tile t)
     {
-        Shaft s = new Shaft(ShaftType.ELEVATOR, new Elevator());
-        s.transport.setTile(t);
+        Shaft s = new Shaft(ShaftType.ELEVATOR, new Elevator(t));
         return s;
     }                                                                                                                
 }  
