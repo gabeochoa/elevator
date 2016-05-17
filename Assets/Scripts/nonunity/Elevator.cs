@@ -110,47 +110,106 @@ public class Elevator : Transportation
     }
 }
 
-
-
 public class Elevator_new : Transportation_new
 {
     int MAX_PEOPLE = 4;
-    int MAX_SPEED = 3;
     int WAIT_TIME = 2;
 
     int currentWait;
 
     public Elevator_new()
     {
+        x = tile.x;
+        y = tile.y;
         up = true;
         curFloor = 0;
         baseSpeed = MAX_SPEED;
         isMoving = false;
         numPeople = 0;
         maxPeople = MAX_PEOPLE;
+        velocity = 0;
         //destination;
+    }
+
+    public float brakeDist()
+    {
+        //d = (v^2) / (2a)
+        return ((velocity*velocity) / (2 * BRAKE_SPD));
     }
 
     public override void update(float deltaTime)
     {
+        //hmm
+        velocity = MathUtil.Clamp(velocity, 0, MAX_SPEED);
+        moveTo(y + (velocity*deltaTime));
+        int posdiff = (int) (destination.y - y);
+        if(posdiff != 0)
+        {
+            //not done moving
+            if(Math.Sign(posdiff) == Math.Sign(velocity))
+            {
+                if(brakeDist() <= Math.Abs(posdiff))
+                {
+                    //welp we cant stop in time, try our best
+                    velocity -= Math.Abs(posdiff) * BRAKE_SPD * deltaTime;
+                }
+                else if(brakeDist()*2 <= Math.Abs(posdiff))
+                {
+                    // time to slowdown
+                    velocity -= Math.Abs(posdiff) * BRAKE_SPD * deltaTime;
+                }
+                else
+                {
+                    // we can gain speed
+                    velocity += Math.Abs(posdiff) * ACCEL_SPD * deltaTime;
+                }
+            }
+            else if(Math.Sign(velocity) == 0)
+            {
+                //we should move please
+                velocity += Math.Sign(posdiff) * ACCEL_SPD * deltaTime;
+            }
+            else
+            {
+                //rip us : going wrong way
+                velocity -= Math.Sign(velocity) * BRAKE_SPD * deltaTime;
+            }
+        }
+
+        if(isMoving && posdiff == 0 && velocity < 1)
+        {
+            moveTo(destination.y);
+            velocity = 0;
+            isMoving = false;
+            arrived(destination.y);
+        }
 
     }
-    public override void moveTo(Tile t)
+
+    public override void moveTo(float yval)
     {
-
+        y = yval;
+        if(changeOccurred != null)
+            changeOccurred();
     }
+
     public override void userEntered(Customer c)
     {
 
+        if(changeOccurred != null)
+            changeOccurred();
     }
+
     public override void userExited(Customer c)
     {
 
+        if(changeOccurred != null)
+            changeOccurred();
     }
 
     public override void arrived(int floor)
     {
-        isMoving = false;
+        
     }
 }
 

@@ -19,7 +19,7 @@ public abstract class Transportation
     {
         return "transportation";
     }
-    
+
     public void setTile(Tile t)
     {
         tile = t;
@@ -32,19 +32,25 @@ public abstract class Transportation_new
     protected bool up = true; //false is down
     protected int curFloor; //-1 for stairs, 0 for empty?
 
-    //TODO: Handle slowing/speeding up
-    //int maxSpeed;
-    //float accelSpeed;
-    //float brakeSpeed;
+    //TODO: dynamic accel?
+    protected int MAX_SPEED = 3;
+    protected float ACCEL_SPD = 1;
+    protected float BRAKE_SPD = 1;
+
     protected int baseSpeed;//floors per second
     protected bool isMoving = false;
 
     protected int numPeople;
     protected int maxPeople;//-1 for stairs, 0 for empty?
 
-    Tile destination;
+    protected float velocity;
 
-    Action changeOccurred;
+    public float x{get; protected set;}
+    public float y{get; protected set;}
+    protected Tile tile;
+    protected Tile destination;
+
+    protected Action changeOccurred;
     public void changeRegisterCallback(Action cb)
     {
         changeOccurred += cb;
@@ -55,15 +61,12 @@ public abstract class Transportation_new
     }
 
     //not sure if we need this for stairs
-    public abstract void moveTo(Tile t);
+    public abstract void moveTo(float yval);
 
     public abstract void update(float deltaTime);
     public abstract void userEntered(Customer c);
     public abstract void userExited(Customer c);
     public abstract void arrived(int floor);
-
-
-
 
 }  
 
