@@ -1,7 +1,6 @@
 using System;              
 using System.Collections;  
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Tile                                                                                                                         
 {                
@@ -82,7 +81,7 @@ public class Tile
 	{
 		if (o.GetType () == typeof(Floor) || o.GetType () == typeof(Shaft) )
 		{
-			Debug.Log ("what the heck");
+			//Debug.Log ("what the heck");
 		}
 		atLocation.Add (o);
 	}

@@ -9,10 +9,12 @@ public class EmptyShaft : Transportation
     public EmptyShaft() : base()
     {
         maxPeople = 0;
-        curPeople = 0;
         baseSpeed = 0;
     }
 
-    override public void arrived(){}
-    override public void update(float deltaTime){}
+	public override void update(float deltaTime){}
+	public override void moveTo(float yval){}
+	public override void userEntered(Customer c){}
+	public override void userExited(Customer c){}
+	public override void arrived(int floor){}
 }
