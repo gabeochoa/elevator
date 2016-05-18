@@ -2,7 +2,6 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-
 public class Elevator_OLD : Transportation_OLD
 {
     protected int index;
@@ -113,7 +112,7 @@ public class Elevator_OLD : Transportation_OLD
 public class Elevator : Transportation
 {
     int MAX_PEOPLE = 4;
-    int WAIT_TIME = 2;
+    //int WAIT_TIME = 2;
     int currentWait;
 
 	public Elevator(Tile t)
@@ -124,7 +123,7 @@ public class Elevator : Transportation
         up = true;
         curFloor = 0;
         baseSpeed = MAX_SPEED;
-        isMoving = false;
+        isMoving = true;
         numPeople = 0;
         maxPeople = MAX_PEOPLE;
         velocity = 0;
@@ -134,64 +133,70 @@ public class Elevator : Transportation
 
     public float brakeDist()
     {
+		//d = vi*t + .5at^2
+
+		//vf2 = vi2 + 2ad
+		//velocity^2 = 2*BRAKE_SPD * D
+
         //d = (v^2) / (2a)
         return ((velocity*velocity) / (2 * BRAKE_SPD));
     }
 
     public override void update(float deltaTime)
     {
-        //hmm
+		//hmm
         velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
-        up = Math.Sign(velocity) >= 0;
-
+        
         int posdiff = (int) (destination.y - y);
+		int velSign = Math.Sign (velocity);
+		int dirSign = Math.Sign (posdiff);
         if(posdiff != 0)
         {
-            //not done moving
-            if(Math.Sign(posdiff) == Math.Sign(velocity))
+			isMoving = true;
+			//not done moving
+			if(dirSign == velSign)
             {
-                if(brakeDist() <= Math.Abs(posdiff))
-                {
-                    //welp we cant stop in time, try our best
-                    velocity -= Math.Abs(posdiff) * BRAKE_SPD * deltaTime;
-                }
-                else if(brakeDist()*2 <= Math.Abs(posdiff))
+				float mydist = brakeDist ();
+				if(mydist*2f > Math.Abs(posdiff))
                 {
                     // time to slowdown
-                    velocity -= Math.Abs(posdiff) * BRAKE_SPD * deltaTime;
+					velocity -= dirSign * BRAKE_SPD * deltaTime;
                 }
                 else
                 {
                     // we can gain speed
-                    velocity += Math.Abs(posdiff) * ACCEL_SPD * deltaTime;
+					velocity += dirSign * ACCEL_SPD * deltaTime;
                 }
             }
-            else if(Math.Sign(velocity) == 0)
+            else if(velSign == 0)
             {
                 //we should move please
-                velocity += Math.Sign(posdiff) * ACCEL_SPD * deltaTime;
+				float acceleration = Math.Min(Math.Abs(posdiff), ACCEL_SPD);
+				velocity += dirSign * acceleration * deltaTime;
             }
             else
             {
                 //rip us : going wrong way
-                velocity -= Math.Sign(velocity) * BRAKE_SPD * deltaTime;
+				velocity -= velSign * BRAKE_SPD * deltaTime;
+				if(Math.Sign(velocity) != velSign) {
+					velocity = 0;
+				}
             }
         }
 
-        if(isMoving && posdiff == 0 && velocity < 1)
+		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 3)
         {
-            moveTo(destination.y);
+			moveTo(destination.y);
             velocity = 0;
             isMoving = false;
             arrived(destination.y);
         }
-
     }
 
     public override void moveTo(float yval)
     {
-        y = yval;
+		y = yval;
         if(changeOccurred != null)
             changeOccurred();
     }
@@ -212,11 +217,14 @@ public class Elevator : Transportation
 
     public override void arrived(int floor)
     {
-        //do whatever
-
+		//do whatever
+		//Debug.Log("arrived at " + floor);
         //choose next destination
+		if (floor == World.world.HEIGHT - 1 || floor == 0)
+			up = !up;
+
         floor = up ? floor + 1 : floor - 1;
-        destination = World.world.building.floors[floor].tile;
+		destination = World.world.tiles[tile.x, floor];
     }
 }
 

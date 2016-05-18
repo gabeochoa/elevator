@@ -8,10 +8,11 @@ public class Floor
     Floor.FloorType type;
     int curPop;
     int maxPop;//empty=0    
-    public Tile tile;
+	//public Tile tile {get;protected set;}
     
-    public Floor(FloorType ty, int max)
+	public Floor(FloorType ty, int max)
     {
+		//tile = t;
         type = ty;
         maxPop = max;
     }
