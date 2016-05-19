@@ -128,7 +128,7 @@ public class Elevator : Transportation
         maxPeople = MAX_PEOPLE;
         velocity = 0;
 
-		destination = World.world.tiles[(int)x, (int)y+2];
+		destination = World.world.tiles[(int)x, (int)y+1];
     }
 
     public float brakeDist()
