@@ -2,31 +2,6 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-public abstract class Transportation_OLD                                                                                                                        
-{                          
-    protected int maxPeople;//-1 is infinite, 0 is empty
-    protected int curPeople;
-    public int curFloor; //-1 for stairs, 0 for empty?
-    protected int baseSpeed;//floors per second
-    protected float loadDelay;//embark / disembark delay
-    public bool canLoad = false;
-    public Tile tile{get; protected set;}
-    public string name;
-    protected Action<int> arrivedCB;
-    public abstract void arrived();
-    public abstract void update(float deltaTime);
-    public override string ToString()
-    {
-        return "transportation";
-    }
-
-    public void setTile(Tile t)
-    {
-        tile = t;
-    }
-
-}  
-
 public abstract class Transportation                                                                                                                       
 {                          
     protected bool up = true; //false is down
@@ -62,7 +37,8 @@ public abstract class Transportation
     }
 
     //not sure if we need this for stairs
-    public abstract void moveTo(float yval);
+	public abstract void moveTo(float yval);
+	public abstract void queue (int floor, bool direction);
 
     public abstract void update(float deltaTime);
     public abstract void userEntered(Customer c);
@@ -77,6 +53,30 @@ public abstract class Transportation
 
 
 
+public abstract class Transportation_OLD                                                                                                                        
+{                          
+	protected int maxPeople;//-1 is infinite, 0 is empty
+	protected int curPeople;
+	public int curFloor; //-1 for stairs, 0 for empty?
+	protected int baseSpeed;//floors per second
+	protected float loadDelay;//embark / disembark delay
+	public bool canLoad = false;
+	public Tile tile{get; protected set;}
+	public string name;
+	protected Action<int> arrivedCB;
+	public abstract void arrived();
+	public abstract void update(float deltaTime);
+	public override string ToString()
+	{
+		return "transportation";
+	}
+	
+	public void setTile(Tile t)
+	{
+		tile = t;
+	}
+	
+}  
 
 
 

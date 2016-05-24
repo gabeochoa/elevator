@@ -86,6 +86,17 @@ public class Tile
 		atLocation.Add (s);
 	}
 
+	public bool hasElevator(){
+		foreach(System.Object o in atLocation)
+		{
+			if(o.GetType() == typeof(Elevator))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void removeFromTile( string name)
 	{
 		if (name == "Floor")

@@ -32,9 +32,10 @@ public class Shaft
         return s;
     }
 
-	public void CustomerWaiting(Customer cust, int floor)
+	public void CustomerWaiting(Customer cust, int floor, bool direction)
 	{
 		//TODO: tell elevator that someone wants to get on
+		transport.queue (floor, direction);
 	}
 
 }  

@@ -17,4 +17,6 @@ public class EmptyShaft : Transportation
 	public override void userEntered(Customer c){}
 	public override void userExited(Customer c){}
 	public override void arrived(int floor){}
+	public override void queue(int floor, bool direction){}
+
 }

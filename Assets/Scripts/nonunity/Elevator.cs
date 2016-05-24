@@ -118,6 +118,11 @@ public class Elevator : Transportation
         floor = up ? floor + 1 : floor - 1;
 		destination = World.world.tiles[tile.x, floor];
     }
+
+	public override void queue(int floor, bool direction)
+	{
+		//someone has called this elevator and wants to use it
+	}
 }
 
 
