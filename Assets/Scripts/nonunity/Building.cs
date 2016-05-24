@@ -80,7 +80,7 @@ public class Building
         }
         foreach(Customer c in customers)
         {
-            c.update();
+			c.update(deltaTime);
         }
     }   
 

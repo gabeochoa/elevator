@@ -41,10 +41,11 @@ public class Customer
         curTransport = null;
     }
 
-    public void updateMovement()
+	public void updateMovement(float deltaTime)
     {
 		if (target == tile) 
 		{
+			//if we hit our tile, generate a new random one to go to
 			Random rnd = new Random();
 			int month = rnd.Next(1, World.world.building.floors.Count-1) + 1;
 			int month2 = rnd.Next(1, World.world.building.floors.Count-1) + 1;
@@ -53,18 +54,23 @@ public class Customer
 			nextTile = tile;
 			return;
 		}
+		//if we dont have a nother tile to goto, or we are at the tile we want to be
         if(nextTile == null || nextTile == tile)
         {
+			//if we dont have a pathfinding tile yet
             if(path == null)
             {
+				//generate a path from us to target
                 path = new PathFind(World.world, tile, target);
                 if(path.Length() == 0)
                 {
                     Console.WriteLine("Customer: Path not viable");
                     path = null;
                     return;
+					//path not possible
                 }
             }
+			//if our path is not null, or we have just generated a non null one, get the next tile. 
             nextTile = path.next();
 			if (nextTile == null) 
 			{
@@ -72,8 +78,12 @@ public class Customer
 			}
         }
         
+		//if our next tile is not null;
+
+		//get the distance to the next tile (should be 1)
+		//figure out how many frames itll take to get there
         float dis = (float) Math.Sqrt(Math.Pow(tile.x - nextTile.x, 2) + Math.Pow(tile.y - nextTile.y, 2));
-        float distFrame = 1/1f;//should be divided by deltaTime;
+        float distFrame = 1/deltaTime;//should be divided by deltaTime;
         float perc = distFrame / dis;
         movement += perc;
 
@@ -114,9 +124,9 @@ public class Customer
         */
 
     }
-    public void update()
+	public void update(float deltaTime)
     {
-        updateMovement();
+		updateMovement(deltaTime);
         Console.WriteLine("cust: curFL: "+curFloor + " target: "+ target + " ("+x + " " + y +")");
     }
 
