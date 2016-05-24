@@ -80,6 +80,7 @@ public class Customer
         
 		//if our next tile is not null;
 
+
 		//get the distance to the next tile (should be 1)
 		//figure out how many frames itll take to get there
         float dis = (float) Math.Sqrt(Math.Pow(tile.x - nextTile.x, 2) + Math.Pow(tile.y - nextTile.y, 2));
@@ -87,42 +88,12 @@ public class Customer
         float perc = distFrame / dis;
         movement += perc;
 
-        if(movement >= 1)
-        {
-            tile = nextTile;
-            movement = 0;
-        }
-/*
-        if(curTransport == null )
-        {
-            //search
-            foreach (Shaft s in World.world.building.shafts)//shafts for building im in;
-            {
-                if(s.type == Shaft.ShaftType.ELEVATOR)
-                {
-                    //Get on elevator
-                    if(s.transport.curFloor == curFloor)
-                    {
-                        Console.WriteLine("get on");
-                        curTransport = s.transport;
-                    }
-                }
-            }
-        }
-        else
-        {
-            //move up / down based on whatever
-            curFloor = curTransport.curFloor;
-        }
-        }
-        else if(curTransport != null)
-        {
-            //we have reached our current floor
-            curTransport = null;
-            Console.WriteLine("get off");
-        }
-        */
-
+		//if we have moved more than one tile this turn, then we are in the next tile
+        if (movement >= 1)
+		{
+			tile = nextTile;
+			movement = 0;
+		}
     }
 	public void update(float deltaTime)
     {
