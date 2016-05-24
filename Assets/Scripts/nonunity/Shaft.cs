@@ -30,5 +30,11 @@ public class Shaft
     {
         Shaft s = new Shaft(ShaftType.ELEVATOR, new Elevator(t));
         return s;
-    }                                                                                                                
+    }
+
+	public void CustomerWaiting(Customer cust, int floor)
+	{
+		//TODO: tell elevator that someone wants to get on
+	}
+
 }  

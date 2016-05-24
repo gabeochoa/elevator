@@ -8,6 +8,7 @@ public class Tile
 	public int y {get; protected set;}
 	public int width { get; protected set; }
 	public int height { get; protected set; }
+	int[,] nei = new int[,]{ {-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 	protected ArrayList atLocation;
 
@@ -27,38 +28,40 @@ public class Tile
         Console.WriteLine("tiledate");
     }
 
-    public Tile[] getNeighbors()
+
+	public bool isValidNeighbor(Tile temp, Tile ths, bool left)
+	{
+		if (left) //left right connection, connect to all
+			return (temp != null);
+		bool a = (temp != null && !(temp.isFloor && this.isFloor));
+		return a;
+	}
+
+	public Tile[] getNeighbors()
     {
         List<Tile> tiles = new List<Tile>();
-
-		Tile xxx = World.world.getTiles(x-1, y);
-		if (xxx != null)
-			tiles.Add (xxx);
-		 xxx = World.world.getTiles(x, y-1);
-		if (xxx != null && !(xxx.isFloor && this.isFloor))
-			tiles.Add (xxx);
-		 xxx = World.world.getTiles(x+1, y);
-		if (xxx != null)
-			tiles.Add (xxx);
-		 xxx = World.world.getTiles(x, y+1);
-		if (xxx != null && !(xxx.isFloor && this.isFloor))
-			tiles.Add (xxx);
 		/*
-        for(int i = -1; i <= 1; i++) 
+		Tile temp = World.world.getTiles(x-1, y);
+		if (temp != null)
+			tiles.Add (temp);
+		 temp = World.world.getTiles(x, y-1);
+		if (temp != null && !(temp.isFloor && this.isFloor))
+			tiles.Add (temp);
+		 temp = World.world.getTiles(x+1, y);
+		if (temp != null)
+			tiles.Add (temp);
+		 temp = World.world.getTiles(x, y+1);
+		if (temp != null && !(temp.isFloor && this.isFloor))
+			tiles.Add (temp);
+		*/
+		for(int i = 0; i < nei.Length/2; i++) 
         {
-            for(int j = -1; j <= 1; j++) 
-            {
-				if(i != 0 || j != 0) 
-                {
-                    Tile xxx = World.world.getTiles(i+x, j+y);
-					if (xxx == null)//|| (isFloor && xxx.isFloor) )
-                        continue;
-                    tiles.Add(xxx);
-                }
-            }
-           
+			Tile xxx = World.world.getTiles(nei[i,0]+x, nei[i,1]+y);
+			if (!isValidNeighbor(xxx, this, (nei[i,0]!=0)))
+                continue;
+            tiles.Add(xxx);
         }
-         */
+        
         return tiles.ToArray();
     }
 

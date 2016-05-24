@@ -16,7 +16,6 @@ public class PathFind
         {
             Console.WriteLine("PathFind: One of the start or end tiles is bad");
         }
-
         Node start = world.graph.nodes[a];
         Node end = world.graph.nodes[b];
 
@@ -58,7 +57,6 @@ public class PathFind
                 {
                     continue;
                 }
-
                 from[nei] = cur;
                 dist[nei] = gscore;
                 huerist[nei] = dist[nei] + cost_est(nei, end);

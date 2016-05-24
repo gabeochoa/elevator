@@ -11,7 +11,7 @@ public class GraphVisualizer : MonoBehaviour {
 	// Update is called once per frame
 	void OnDrawGizmos ()
 	{
-		if (World.world == null)
+		if (World.world == null || World.world.building.customers == null)
 			return;
 
 		//Draw path
@@ -26,6 +26,8 @@ public class GraphVisualizer : MonoBehaviour {
 				Debug.DrawLine (a, b, Color.red);
 			}
 		}
+		if (World.world.graph == null || World.world.graph.nodes == null)
+			return;
 
 		foreach (Node n in World.world.graph.nodes.Values) 
 		{
