@@ -40,20 +40,6 @@ public class Tile
 	public Tile[] getNeighbors()
     {
         List<Tile> tiles = new List<Tile>();
-		/*
-		Tile temp = World.world.getTiles(x-1, y);
-		if (temp != null)
-			tiles.Add (temp);
-		 temp = World.world.getTiles(x, y-1);
-		if (temp != null && !(temp.isFloor && this.isFloor))
-			tiles.Add (temp);
-		 temp = World.world.getTiles(x+1, y);
-		if (temp != null)
-			tiles.Add (temp);
-		 temp = World.world.getTiles(x, y+1);
-		if (temp != null && !(temp.isFloor && this.isFloor))
-			tiles.Add (temp);
-		*/
 		for(int i = 0; i < nei.Length/2; i++) 
         {
 			Tile xxx = World.world.getTiles(nei[i,0]+x, nei[i,1]+y);
@@ -61,7 +47,6 @@ public class Tile
                 continue;
             tiles.Add(xxx);
         }
-        
         return tiles.ToArray();
     }
 
