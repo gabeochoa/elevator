@@ -1,15 +1,21 @@
 using System;              
 using System.Collections;  
 using System.Collections.Generic;
+
+//using UnityEngine;
+
 public class Elevator : Transportation
 {
     int MAX_PEOPLE = 4;
+	List<Customer> onElevator;
     //int WAIT_TIME = 2;
     int currentWait;
 
 	public Elevator(Tile t)
     {
+		new List<Customer> ();
 		tile = t;
+		tile.addToTile (this);
         x = tile.x;
         y = tile.y;
         up = true;
@@ -19,8 +25,7 @@ public class Elevator : Transportation
         numPeople = 0;
         maxPeople = MAX_PEOPLE;
         velocity = 0;
-
-		destination = World.world.tiles[(int)x, (int)y+1];
+		destination = null;
     }
 
     public float brakeDist()
@@ -36,7 +41,10 @@ public class Elevator : Transportation
 
     public override void update(float deltaTime)
     {
-		return;//hmm
+		if (destination == null)
+			return;
+		//Debug.Log ("destination: " + destination);
+		//return;//hmm
         velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
         
@@ -93,11 +101,12 @@ public class Elevator : Transportation
             changeOccurred();
     }
 
-    public override void userEntered(Customer c)
+    public override bool userEntered(Customer c)
     {
 
         if(changeOccurred != null)
             changeOccurred();
+		return true;
     }
 
     public override void userExited(Customer c)
@@ -117,11 +126,22 @@ public class Elevator : Transportation
 
         floor = up ? floor + 1 : floor - 1;
 		destination = World.world.tiles[tile.x, floor];
+		tile.removeFromTile (this);
+		tile = World.world.tiles [(int)x, (int)y];
+		tile.addToTile (this);
     }
 
-	public override void queue(int floor, bool direction)
+	public override bool queue(int floor, bool direction)
 	{
-		//someone has called this elevator and wants to use it
+		if (destination == null)
+		{	
+			//someone has called this elevator and wants to use it
+			//TODO: handle multiple people, right now we will just go directly there
+			destination = World.world.tiles [(int)x, (int)floor];
+			//Debug.Log ("queue: " + floor);
+			return true;
+		}
+		return false;
 	}
 }
 

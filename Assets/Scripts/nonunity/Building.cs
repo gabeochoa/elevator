@@ -66,6 +66,7 @@ public class Building
 		for (int i = 0; i < World.world.HEIGHT; i++)
 		{
 			t = World.world.tiles [width, i];
+			t.addToTile(sa);
 			t.isFloor = false;
 			t.isShaft = true;
 			t.removeFromTile ("Floor");

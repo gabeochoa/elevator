@@ -2,6 +2,8 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
+//using UnityEngine;
+
 public class Customer                                                                                                                         
 {      
 	public Tile target{ get; protected set; }
@@ -14,6 +16,7 @@ public class Customer
     Tile nextTile;
     float movement = 0;
 	public string name = "";
+	bool hasCalled = false;
 
     float lerp(float v0, float v1, float t) {
       return (1-t)*v0 + t*v1;
@@ -46,7 +49,7 @@ public class Customer
 		if (target == tile)
 		{
 			//if we hit our tile, generate a new random one to go to
-			Random rnd = new Random ();
+			System.Random rnd = new System.Random ();
 			int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
 			int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
 			target = World.world.tiles [month2, month];
@@ -98,16 +101,24 @@ public class Customer
 		} 
 		else
 		{
+			Shaft shft = nextTile.getShaft();
 			//We need to wait for an elevator or whatever
 			if(nextTile.hasElevator())
 			{
 				//get in
+				//Debug.LogError("ELEVATOR Here");
+				if(shft.getOnTransport(this))
+				{
+					//Debug.Log("we are on elevator");
+					curTransport = shft.transport;
+				}
 			}
-			else
+			else if(!hasCalled) //to prevent spamming the button
 			{
 				//tell elevator to come get us
-				//callElevator(nextTile.height);
+				hasCalled = shft.CallWaiting(this, nextTile.y, (this.tile.y - nextTile.y)==1);
 			}
+			else{}
 		}
 		
     }
@@ -119,7 +130,7 @@ public class Customer
 
     public void reset(int floors)
     {
-        Random rnd = new Random();
+        System.Random rnd = new System.Random();
         int month = rnd.Next(1, floors);
         target = World.world.tiles[1, month];
         maxWaitingTime = 10f;

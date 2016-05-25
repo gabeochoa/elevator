@@ -38,13 +38,12 @@ public abstract class Transportation
 
     //not sure if we need this for stairs
 	public abstract void moveTo(float yval);
-	public abstract void queue (int floor, bool direction);
+	public abstract bool queue (int floor, bool direction);
 
     public abstract void update(float deltaTime);
-    public abstract void userEntered(Customer c);
+    public abstract bool userEntered(Customer c);
     public abstract void userExited(Customer c);
     public abstract void arrived(int floor);
-
 	public void setTile(Tile t)
 	{
 		tile = t;

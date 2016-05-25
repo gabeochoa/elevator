@@ -96,6 +96,16 @@ public class Tile
 		}
 		return false;
 	}
+	public Shaft getShaft(){
+		foreach(System.Object o in atLocation)
+		{
+			if(o.GetType() == typeof(Shaft))
+			{
+				return (Shaft)o;
+			}
+		}
+		return null;
+	}
 
 	public void removeFromTile( string name)
 	{
