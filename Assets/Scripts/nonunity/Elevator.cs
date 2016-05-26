@@ -31,10 +31,8 @@ public class Elevator : Transportation
     public float brakeDist()
     {
 		//d = vi*t + .5at^2
-
 		//vf2 = vi2 + 2ad
 		//velocity^2 = 2*BRAKE_SPD * D
-
         //d = (v^2) / (2a)
         return ((velocity*velocity) / (2 * BRAKE_SPD));
     }
@@ -42,10 +40,15 @@ public class Elevator : Transportation
     public override void update(float deltaTime)
     {
 		if (destination == null)
+		{
+			//just go to the end of the direction we were going
+			//destination = up? World.world.tiles [(int)x, (int)World.world.HEIGHT-1] : World.world.tiles [(int)x, 0];
 			return;
+
+		}
 		//Debug.Log ("destination: " + destination);
-		//return;//hmm
-        velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
+
+		velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
         
         int posdiff = (int) (destination.y - y);
@@ -118,6 +121,8 @@ public class Elevator : Transportation
 
     public override void arrived(int floor)
     {
+		if(arrivedCB != null)
+			arrivedCB (floor);
 		//do whatever
 		//Debug.Log("arrived at " + floor);
         //choose next destination
@@ -143,6 +148,8 @@ public class Elevator : Transportation
 		}
 		return false;
 	}
+
+
 }
 
 

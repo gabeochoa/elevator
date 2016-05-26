@@ -46,48 +46,86 @@ public class Customer
 
 	public void updateMovement(float deltaTime)
     {
-		if (target == tile)
+		if (curTransport == null)
 		{
-			//if we hit our tile, generate a new random one to go to
-			System.Random rnd = new System.Random ();
-			int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
-			int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
-			target = World.world.tiles [month2, month];
-			path = null;
-			nextTile = tile;
-			return;
-		}
-		//if we dont have a nother tile to goto, or we are at the tile we want to be
-		if (nextTile == null || nextTile == tile)
-		{
-			//if we dont have a pathfinding tile yet
-			if (path == null)
+			if (target == tile)
 			{
-				//generate a path from us to target
-				path = new PathFind (World.world, tile, target);
-				if (path.Length () == 0)
+				//if we hit our tile, generate a new random one to go to
+				System.Random rnd = new System.Random ();
+				int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
+				int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
+				target = World.world.tiles [month2, month];
+				path = null;
+				nextTile = tile;
+				return;
+			}
+			//if we dont have a nother tile to goto, or we are at the tile we want to be
+			if (nextTile == null || nextTile == tile)
+			{
+				//if we dont have a pathfinding tile yet
+				if (path == null)
 				{
-					Console.WriteLine ("Customer: Path not viable");
-					path = null;
-					return;
-					//path not possible
+					//generate a path from us to target
+					path = new PathFind (World.world, tile, target);
+					if (path.Length () == 0)
+					{
+						Console.WriteLine ("Customer: Path not viable");
+						path = null;
+						return;
+						//path not possible
+					}
+				}
+				//if our path is not null, or we have just generated a non null one, get the next tile. 
+				nextTile = path.next ();
+				if (nextTile == null)
+				{
+					nextTile = tile;
 				}
 			}
-			//if our path is not null, or we have just generated a non null one, get the next tile. 
-			nextTile = path.next ();
-			if (nextTile == null)
-			{
-				nextTile = tile;
-			}
-		}
-		//if our next tile is not null;
+			//if our next tile is not null;
 
-		//if our next tile is not a shaft/elevator
-		if (!nextTile.isShaft)
+			//if our next tile is not a shaft/elevator
+			if (!nextTile.isShaft)
+			{
+				//get the distance to the next tile (should be 1)
+				//figure out how many frames itll take to get there
+				float dis = (float)Math.Sqrt (Math.Pow (tile.x - nextTile.x, 2) + Math.Pow (tile.y - nextTile.y, 2));
+				float distFrame = 1 / deltaTime;//should be divided by deltaTime;
+				float perc = distFrame / dis;
+				movement += perc;
+
+				//if we have moved more than one tile this turn, then we are in the next tile
+				if (movement >= 1)
+				{
+					tile = nextTile;
+					movement = 0;
+				}
+			} else
+			{
+				Shaft shft = nextTile.getShaft ();
+				//We need to wait for an elevator or whatever
+				if (nextTile.hasElevator ())
+				{
+					//get in
+					//Debug.LogError("ELEVATOR Here");
+					if (shft.getOnTransport (this))
+					{
+						//Debug.Log("we are on elevator");
+						curTransport = shft.transport;
+						curTransport.RegisterArrivedCallback (elevatorArrived);
+					}
+				} else if (!hasCalled) //to prevent spamming the button
+				{
+					//tell elevator to come get us
+					hasCalled = shft.CallWaiting (this, nextTile.y, (this.tile.y - nextTile.y) == 1);
+				} else
+				{
+				}
+			}
+		} else
 		{
-			//get the distance to the next tile (should be 1)
-			//figure out how many frames itll take to get there
-			float dis = (float)Math.Sqrt (Math.Pow (tile.x - nextTile.x, 2) + Math.Pow (tile.y - nextTile.y, 2));
+			//we have an elevator
+			float dis = (float)Math.Sqrt (Math.Pow (tile.x - curTransport.x, 2) + Math.Pow (tile.y - curTransport.y, 2));
 			float distFrame = 1 / deltaTime;//should be divided by deltaTime;
 			float perc = distFrame / dis;
 			movement += perc;
@@ -98,29 +136,7 @@ public class Customer
 				tile = nextTile;
 				movement = 0;
 			}
-		} 
-		else
-		{
-			Shaft shft = nextTile.getShaft();
-			//We need to wait for an elevator or whatever
-			if(nextTile.hasElevator())
-			{
-				//get in
-				//Debug.LogError("ELEVATOR Here");
-				if(shft.getOnTransport(this))
-				{
-					//Debug.Log("we are on elevator");
-					curTransport = shft.transport;
-				}
-			}
-			else if(!hasCalled) //to prevent spamming the button
-			{
-				//tell elevator to come get us
-				hasCalled = shft.CallWaiting(this, nextTile.y, (this.tile.y - nextTile.y)==1);
-			}
-			else{}
 		}
-		
     }
 	public void update(float deltaTime)
     {
@@ -137,13 +153,14 @@ public class Customer
         curFloor = 0;
     }
 
-    public void elevatorArrived(int floor)
+	public void elevatorArrived(int floor)
     {
         //if elevator floor type == target
         //get off elevator
         //else
         //update our current floor
-        curFloor = floor;
+		curFloor = floor;
+		curTransport.UnregisterArrivedCallback (elevatorArrived);
     }
 
 

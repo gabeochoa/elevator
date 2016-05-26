@@ -48,6 +48,17 @@ public abstract class Transportation
 	{
 		tile = t;
 	}
+
+	protected Action<int> arrivedCB;
+	public void RegisterArrivedCallback(Action<int> func)
+	{
+		arrivedCB += func;
+	}	
+
+	public void UnregisterArrivedCallback(Action<int> func)
+	{
+		arrivedCB -= func;
+	}
 }  
 
 
