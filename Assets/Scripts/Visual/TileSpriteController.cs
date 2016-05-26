@@ -14,11 +14,15 @@ public class TileSpriteController : MonoBehaviour {
 	bool afterInit = false;
 	void init()
 	{
+		GameObject tileObj = new GameObject ();
+		tileObj.name = "Tiles";
+		tileObj.transform.parent = this.transform;
+
 		for (int i = 0; i < World.world.WIDTH; i++) {
 			for (int j = 0; j < World.world.HEIGHT; j++) {
 				Tile t = World.world.tiles [i, j];
 				GameObject obj = (GameObject) Instantiate (tilePrefab, new Vector3 (t.x, t.y, -0.05f), Quaternion.identity);
-				obj.transform.parent = this.transform;
+				obj.transform.parent = tileObj.transform;
 			}
 		}
 		extra = (GameObject) Instantiate (tilePrefab, new Vector3 (0, 0, 0), Quaternion.identity);

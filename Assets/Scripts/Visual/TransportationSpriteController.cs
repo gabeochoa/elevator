@@ -11,13 +11,17 @@ public class TransportationSpriteController : MonoBehaviour {
 	bool afterInit = false;
 	void init()
 	{
+		GameObject Elevp = new GameObject ();
+		Elevp.transform.parent = this.transform;
+		Elevp.name = "Elevators";
+
 		int i = 0;
 		foreach(Shaft c in World.world.building.shafts)
 		{
 			if(c.type == Shaft.ShaftType.ELEVATOR)
 			{
 				GameObject obj = (GameObject) Instantiate (ElevatorPrefab, new Vector3 (c.transport.x, c.transport.y, 0), Quaternion.identity);
-				obj.transform.parent = this.transform;
+				obj.transform.parent = Elevp.transform;
 				obj.name = "Elevator" + i;
 				c.transport.name = "Elevator"+i;
 				i+=1;

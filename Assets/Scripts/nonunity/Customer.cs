@@ -2,7 +2,6 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-//using UnityEngine;
 
 public class Customer                                                                                                                         
 {      
@@ -133,7 +132,7 @@ public class Customer
 			//if we have moved more than one tile this turn, then we are in the next tile
 			if (movement >= 1)
 			{
-				tile = nextTile;
+				tile = World.world.tiles[(int)curTransport.x, (int)curTransport.y];
 				movement = 0;
 			}
 		}
@@ -155,13 +154,13 @@ public class Customer
 
 	public void elevatorArrived(int floor)
     {
-        //if elevator floor type == target
-        //get off elevator
-        //else
-        //update our current floor
-		curFloor = floor;
-		curTransport.UnregisterArrivedCallback (elevatorArrived);
-    }
+        curFloor = floor;
+		if (curFloor == target.y)
+		{
+			curTransport.UnregisterArrivedCallback (elevatorArrived);
+			curTransport = null;
+		}
+	}
 
 
     public override string ToString()

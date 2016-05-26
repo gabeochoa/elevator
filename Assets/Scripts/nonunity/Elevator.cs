@@ -2,7 +2,7 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
-//using UnityEngine;
+using UnityEngine;
 
 public class Elevator : Transportation
 {
@@ -25,7 +25,7 @@ public class Elevator : Transportation
         numPeople = 0;
         maxPeople = MAX_PEOPLE;
         velocity = 0;
-		destination = null;
+		destination = World.world.tiles [(int)x, 0];
     }
 
     public float brakeDist()
@@ -44,7 +44,6 @@ public class Elevator : Transportation
 			//just go to the end of the direction we were going
 			//destination = up? World.world.tiles [(int)x, (int)World.world.HEIGHT-1] : World.world.tiles [(int)x, 0];
 			return;
-
 		}
 		//Debug.Log ("destination: " + destination);
 
@@ -128,8 +127,7 @@ public class Elevator : Transportation
         //choose next destination
 		if (floor == World.world.HEIGHT - 1 || floor == 0)
 			up = !up;
-
-        floor = up ? floor + 1 : floor - 1;
+		floor = !up ? floor + 1 : floor - 1;
 		destination = World.world.tiles[tile.x, floor];
 		tile.removeFromTile (this);
 		tile = World.world.tiles [(int)x, (int)y];
