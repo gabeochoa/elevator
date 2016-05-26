@@ -1,3 +1,4 @@
 # elevator
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://thumbs.gfycat.com/UntimelyImpoliteBactrian-size_restricted.gif "The start (pathfinding)")
+![alt text](https://thumbs.gfycat.com/ShockedGoldenCuscus-size_restricted.gif "Taking the stairs")
