@@ -16,6 +16,7 @@ public class Customer
     float movement = 0;
 	public string name = "";
 	bool hasCalled = false;
+	bool justgotoff = false;
 
     float lerp(float v0, float v1, float t) {
       return (1-t)*v0 + t*v1;
@@ -84,8 +85,9 @@ public class Customer
 			//if our next tile is not null;
 
 			//if our next tile is not a shaft/elevator
-			if (!nextTile.isShaft)
+			if (justgotoff || !nextTile.isShaft)
 			{
+				justgotoff = false;
 				//get the distance to the next tile (should be 1)
 				//figure out how many frames itll take to get there
 				float dis = (float)Math.Sqrt (Math.Pow (tile.x - nextTile.x, 2) + Math.Pow (tile.y - nextTile.y, 2));
@@ -157,8 +159,10 @@ public class Customer
         curFloor = floor;
 		if (curFloor == target.y)
 		{
+			tile = World.world.tiles[(int)curTransport.x, (int)target.y];
 			curTransport.UnregisterArrivedCallback (elevatorArrived);
 			curTransport = null;
+			justgotoff = true;
 		}
 	}
 
