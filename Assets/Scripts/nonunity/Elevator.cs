@@ -155,7 +155,7 @@ public class Elevator : Transportation
 
 
 
-
+/*
 public class Elevator_OLD : Transportation_OLD
 {
 	protected int index;
@@ -262,7 +262,7 @@ public class Elevator_OLD : Transportation_OLD
 		return "elevator";
 	}
 }
-
+*/
 
 
 

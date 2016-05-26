@@ -2,7 +2,7 @@
 using System;              
 using System.Collections;  
 using System.Collections.Generic;
-
+/*
 public class Stairs : Transportation_OLD
 {
     public Stairs() : base()
@@ -20,3 +20,4 @@ public class Stairs : Transportation_OLD
     }
     override public void update(float deltaTime){}
 }
+*/

@@ -62,7 +62,7 @@ public abstract class Transportation
 }  
 
 
-
+/*
 public abstract class Transportation_OLD                                                                                                                        
 {                          
 	protected int maxPeople;//-1 is infinite, 0 is empty
@@ -87,7 +87,7 @@ public abstract class Transportation_OLD
 	}
 	
 }  
-
+*/
 
 
 
