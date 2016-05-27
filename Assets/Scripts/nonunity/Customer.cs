@@ -43,20 +43,39 @@ public class Customer
         curFloor = 0;
         curTransport = null;
     }
+	
+	public void randomNextTarget()
+	{
+		System.Random rnd = new System.Random ();
+		int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
+		int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
+		target = World.world.tiles [month2, month]; //set target 
+		path = null; //invalidate any paths
+		nextTile = tile; //stay in spot
+	}
 
-	public void updateMovement(float deltaTime)
+	public void updateMovement(float deltaTime, float x, float y)
     {
+		float dis = (float)Math.Sqrt (Math.Pow (tile.x - x, 2) + Math.Pow (tile.y - y, 2));
+		float distFrame = 1 / deltaTime;//should be divided by deltaTime;
+		float perc = distFrame / dis;
+		movement += perc;
+		
+		//if we have moved more than one tile this turn, then we are in the next tile
+		if (movement >= 1)
+		{
+			tile = World.world.tiles[(int)x, (int)y];
+			movement = 0;
+		}
+    }
+	public void update(float deltaTime)
+	{
 		if (curTransport == null)
 		{
 			if (target == tile)
 			{
 				//if we hit our tile, generate a new random one to go to
-				System.Random rnd = new System.Random ();
-				int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
-				int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
-				target = World.world.tiles [month2, month];
-				path = null;
-				nextTile = tile;
+				randomNextTarget();
 				return;
 			}
 			//if we dont have a nother tile to goto, or we are at the tile we want to be
@@ -82,7 +101,6 @@ public class Customer
 					nextTile = tile;
 				}
 			}
-			//if our next tile is not null;
 
 			//if our next tile is not a shaft/elevator
 			if (justgotoff || !nextTile.isShaft)
@@ -90,17 +108,8 @@ public class Customer
 				justgotoff = false;
 				//get the distance to the next tile (should be 1)
 				//figure out how many frames itll take to get there
-				float dis = (float)Math.Sqrt (Math.Pow (tile.x - nextTile.x, 2) + Math.Pow (tile.y - nextTile.y, 2));
-				float distFrame = 1 / deltaTime;//should be divided by deltaTime;
-				float perc = distFrame / dis;
-				movement += perc;
+				updateMovement(deltaTime, nextTile.x, nextTile.y);
 
-				//if we have moved more than one tile this turn, then we are in the next tile
-				if (movement >= 1)
-				{
-					tile = nextTile;
-					movement = 0;
-				}
 			} else
 			{
 				Shaft shft = nextTile.getShaft ();
@@ -126,30 +135,14 @@ public class Customer
 		} else
 		{
 			//we have an elevator
-			float dis = (float)Math.Sqrt (Math.Pow (tile.x - curTransport.x, 2) + Math.Pow (tile.y - curTransport.y, 2));
-			float distFrame = 1 / deltaTime;//should be divided by deltaTime;
-			float perc = distFrame / dis;
-			movement += perc;
-
-			//if we have moved more than one tile this turn, then we are in the next tile
-			if (movement >= 1)
-			{
-				tile = World.world.tiles[(int)curTransport.x, (int)curTransport.y];
-				movement = 0;
-			}
+			updateMovement(deltaTime, curTransport.x, curTransport.y);
 		}
-    }
-	public void update(float deltaTime)
-    {
-		updateMovement(deltaTime);
-        Console.WriteLine("cust: curFL: "+curFloor + " target: "+ target + " ("+x + " " + y +")");
-    }
+	}
+
 
     public void reset(int floors)
     {
-        System.Random rnd = new System.Random();
-        int month = rnd.Next(1, floors);
-        target = World.world.tiles[1, month];
+		randomNextTarget ();
         maxWaitingTime = 10f;
         curFloor = 0;
     }
@@ -160,6 +153,7 @@ public class Customer
 		if (curFloor == target.y)
 		{
 			tile = World.world.tiles[(int)curTransport.x, (int)target.y];
+			nextTile = World.world.tiles[(int)curTransport.x, (int)target.y];
 			curTransport.UnregisterArrivedCallback (elevatorArrived);
 			curTransport = null;
 			justgotoff = true;

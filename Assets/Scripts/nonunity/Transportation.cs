@@ -8,11 +8,11 @@ public abstract class Transportation
     protected int curFloor; //-1 for stairs, 0 for empty?
 
     //TODO: dynamic accel?
-    protected int MAX_SPEED = 1;
-    protected float ACCEL_SPD = 0.2f;
+	protected float MAX_SPEED = 5f;
+    protected float ACCEL_SPD = 2f;
     protected float BRAKE_SPD = 0.5f;
 
-    protected int baseSpeed;//floors per second
+    protected float baseSpeed;//floors per second
     protected bool isMoving = false;
 
     protected int numPeople;

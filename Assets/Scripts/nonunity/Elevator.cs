@@ -1,4 +1,4 @@
-using System;              
+ using System;              
 using System.Collections;  
 using System.Collections.Generic;
 
@@ -45,8 +45,6 @@ public class Elevator : Transportation
 			//destination = up? World.world.tiles [(int)x, (int)World.world.HEIGHT-1] : World.world.tiles [(int)x, 0];
 			return;
 		}
-		//Debug.Log ("destination: " + destination);
-
 		velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
         
@@ -86,7 +84,6 @@ public class Elevator : Transportation
 				}
             }
         }
-
 		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 3)
         {
 			moveTo(destination.y);
@@ -146,8 +143,6 @@ public class Elevator : Transportation
 		}
 		return false;
 	}
-
-
 }
 
 
