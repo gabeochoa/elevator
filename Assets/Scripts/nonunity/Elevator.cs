@@ -86,10 +86,10 @@ public class Elevator : Transportation
         }
 		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 3)
         {
-			moveTo(destination.y);
+			moveTo(destination.y); //TODO: if this is changed to just 'y' the elevator moves at the correct speed
             velocity = 0;
             isMoving = false;
-            arrived(destination.y);
+            arrived(destination.y);//however this is then not accurate i think
         }
     }
 
