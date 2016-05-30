@@ -33,9 +33,7 @@ public class GraphVisualizer : MonoBehaviour {
 				{
 					a = b;
 					b = new Vector3 (n.x, n.y, 2);
-
-					Debug.Log(red);
-					Debug.DrawLine (a, b, new Color(red, gre, blu));
+					Debug.DrawLine (a, b, Color.red);//new Color(red, gre, blu));
 				}
 			}
 		}

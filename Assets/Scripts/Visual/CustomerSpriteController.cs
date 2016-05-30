@@ -13,6 +13,8 @@ public class CustomerSpriteController : MonoBehaviour {
 	void init()
 	{
 		int i = 0;
+		float red,gre, blu;
+		System.Random rnd = new System.Random();
 		foreach(Customer c in World.world.building.customers)
 		{
 			GameObject obj = (GameObject) Instantiate (CustomerPrefab, new Vector3 (c.x, c.y, 0), Quaternion.identity);
@@ -20,6 +22,10 @@ public class CustomerSpriteController : MonoBehaviour {
 			obj.name = "Customer" + i;
 			c.name = "Customer" + i;
 			i += 1;
+			red = rnd.Next (0,100)/100f;
+			gre = rnd.Next (0,100)/100f;
+			blu = rnd.Next (0,100)/100f;
+			obj.GetComponent<MeshRenderer>().material.color = new Color(red, gre, blu);
 		}
 		afterInit = true;	
 	}

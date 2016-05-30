@@ -64,7 +64,7 @@ public class Customer
 	public void updateMovement(float deltaTime, float x, float y)
     {
 		float dis = (float)Math.Sqrt (Math.Pow (tile.x - x, 2) + Math.Pow (tile.y - y, 2));
-		float distFrame = 1 / deltaTime;//should be divided by deltaTime;
+		float distFrame = 1 / (0.5f*deltaTime);//should be divided by deltaTime;
 		float perc = distFrame / dis;
 		movement += perc;
 		
@@ -130,7 +130,7 @@ public class Customer
 		} else if (!hasCalled) //to prevent spamming the button
 		{
 
-			//Debug.Log ("comgetus");
+			Debug.Log ("comgetus" + name);
 			//tell elevator to come get us
 			hasCalled = shft.CallWaiting (this, nextTile.y, (this.tile.y - nextTile.y) == 1);
 		} else
@@ -205,3 +205,11 @@ public class Customer
     }
 
 }  
+
+
+
+
+
+
+
+

@@ -1,6 +1,8 @@
  using System;              
 using System.Collections;  
 using System.Collections.Generic;
+using Priority_Queue;
+
 
 using UnityEngine;
 
@@ -10,6 +12,8 @@ public class Elevator : Transportation
 	List<Customer> onElevator;
     //int WAIT_TIME = 2;
     int currentWait;
+
+    SimplePriorityQueue<int> buttonsPressed = new SimplePriorityQueue<int>();
 
 	public Elevator(Tile t)
     {
@@ -42,8 +46,9 @@ public class Elevator : Transportation
 		if (destination == null)
 		{
 			//just go to the end of the direction we were going
-			//destination = up? World.world.tiles [(int)x, (int)World.world.HEIGHT-1] : World.world.tiles [(int)x, 0];
-			return;
+            if(buttonsPressed.Count == 0)
+                return;
+            destination = World.world.tiles [(int)x, buttonsPressed.Dequeue()];
 		}
 		velocity = MathUtil.Clamp(velocity, -MAX_SPEED, MAX_SPEED);
         moveTo(y + (velocity*deltaTime));
@@ -85,7 +90,7 @@ public class Elevator : Transportation
             }
         }
 		//Debug.Log (isMoving + " " + posdiff +" " + velocity);
-		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 0.8f)
+		if(isMoving && posdiff == 0 && Math.Abs(velocity) < BRAKE_SPD)
         {
 			//Debug.Log ("inside");
 			moveTo(destination.y); //TODO: if this is changed to just 'y' the elevator moves at the correct speed
@@ -105,6 +110,7 @@ public class Elevator : Transportation
     public override bool userEntered(Customer c)
     {
 		destination = c.target;
+        numPeople++;
         if(changeOccurred != null)
             changeOccurred();
 		return true;
@@ -112,7 +118,10 @@ public class Elevator : Transportation
 
     public override void userExited(Customer c)
     {
+        numPeople--;
 		c.tile = destination;
+        if(numPeople == 0)
+            destination = null;
         if(changeOccurred != null)
             changeOccurred();
     }
@@ -138,10 +147,11 @@ public class Elevator : Transportation
 
 	public override bool queue(int floor, bool direction)
 	{
-		//Debug.LogError ("queue: " + floor);
+        buttonsPressed.Enqueue(floor, Math.Abs(floor - y));
 		if (destination == null)
 		{	
-			//someone has called this elevator and wants to use it
+            //Debug.LogError ("queue: " + floor);
+        	//someone has called this elevator and wants to use it
 			//TODO: handle multiple people, right now we will just go directly there
 			destination = World.world.tiles [(int)x, (int)floor];
 			return true;

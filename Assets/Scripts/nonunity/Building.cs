@@ -12,11 +12,13 @@ public class Building
     public List<Floor> floors;
     public List<Customer> customers;
 
+    System.Random rnd;
     int happinessLevel; // 
     int maxPeople;
 
     public Building()
     {
+        rnd = new System.Random();
 		floors = new List<Floor>();
 
 		for (int i = 0; i < World.world.HEIGHT; i++) 
@@ -96,7 +98,6 @@ public class Building
 
     public Customer generateRandomCust()
     {
-		System.Random rnd = new System.Random();
         int month = rnd.Next(1, floors.Count-1) + 1;
         Customer c = new Customer(World.world.tiles[1, month], 10f);
 		World.world.tiles[0,0].addToTile(c);
