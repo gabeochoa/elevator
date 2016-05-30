@@ -30,7 +30,12 @@ public class Building
 		addShaft (World.world.WIDTH-1, Shaft.ShaftType.ELEVATOR);
         
         customers = new List<Customer>();
-        customers.Add(generateRandomCust());
+        Customer c = generateRandomCust();
+        customers.Add(c);
+         c = generateRandomCust();
+        customers.Add(c);
+         c = generateRandomCust();
+        customers.Add(c);
     }
 
 	public void addFloor(int height)

@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;              
+using System.Collections;  
+using System.Collections.Generic;
 
 public class TileSpriteController : MonoBehaviour {
 
 	public GameObject tilePrefab;
 
 	public GameObject extra;
+	//List<GameObject> targets;
 	// Use this for initialization
 	void Start () {
 		
@@ -17,7 +20,7 @@ public class TileSpriteController : MonoBehaviour {
 		GameObject tileObj = new GameObject ();
 		tileObj.name = "Tiles";
 		tileObj.transform.parent = this.transform;
-
+		//targets = new List<GameObject>();
 		for (int i = 0; i < World.world.WIDTH; i++) {
 			for (int j = 0; j < World.world.HEIGHT; j++) {
 				Tile t = World.world.tiles [i, j];
@@ -25,11 +28,6 @@ public class TileSpriteController : MonoBehaviour {
 				obj.transform.parent = tileObj.transform;
 			}
 		}
-		extra = (GameObject) Instantiate (tilePrefab, new Vector3 (0, 0, 0), Quaternion.identity);
-		extra.transform.parent = this.transform;
-		extra.transform.GetChild (0).transform.localScale = new Vector3 (1, 1, 1);
-		extra.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.green;
-
 		afterInit = true;	
 	}
 	// Update is called once per frame
@@ -37,8 +35,16 @@ public class TileSpriteController : MonoBehaviour {
 		if (!afterInit) {
 			init ();
 		}
+		/*targets.Clear();
 
-		Tile t = World.world.building.customers [0].target;
-		extra.transform.position = new Vector3(t.x,t.y, 0);
+		foreach(Customer c in World.world.building.customers)
+		{
+			Tile t = c.target;
+			extra = (GameObject) Instantiate (tilePrefab, new Vector3 (t.x,t.y, 0), Quaternion.identity);
+			extra.transform.parent = this.transform;
+			extra.transform.GetChild (0).transform.localScale = new Vector3 (1, 1, 1);
+			extra.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = Color.green;
+			targets.Add(extra);
+		}*/
 	}
 }

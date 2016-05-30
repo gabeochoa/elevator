@@ -15,15 +15,28 @@ public class GraphVisualizer : MonoBehaviour {
 			return;
 
 		//Draw path
-		Vector3 a = new Vector3 (World.world.building.customers [0].tile.x, World.world.building.customers [0].tile.y, 2);
-		Vector3 b = new Vector3 (World.world.building.customers [0].tile.x, World.world.building.customers [0].tile.y, 2);
-		if (World.world.building.customers [0].path != null)
+
+		Vector3 a;Vector3 b;
+		float red,gre,blu;
+		System.Random rnd = new System.Random ();
+		
+		foreach(Customer c in World.world.building.customers )
 		{
-			foreach (Tile n in World.world.building.customers[0].path.path)
+			a = new Vector3 (c.tile.x, c.tile.y, 2);
+			b = new Vector3 (c.tile.x, c.tile.y, 2);
+			red = rnd.Next (0,100)/100f;
+			gre = rnd.Next (0,100)/100f;
+			blu = rnd.Next (0,100)/100f;
+			if (c.path != null)
 			{
-				a = b;
-				b = new Vector3 (n.x, n.y, 2);
-				Debug.DrawLine (a, b, Color.red);
+				foreach (Tile n in c.path.path)
+				{
+					a = b;
+					b = new Vector3 (n.x, n.y, 2);
+
+					Debug.Log(red);
+					Debug.DrawLine (a, b, new Color(red, gre, blu));
+				}
 			}
 		}
 		if (World.world.graph == null || World.world.graph.nodes == null)
