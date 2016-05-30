@@ -84,8 +84,10 @@ public class Elevator : Transportation
 				}
             }
         }
-		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 3)
+		//Debug.Log (isMoving + " " + posdiff +" " + velocity);
+		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 0.8f)
         {
+			Debug.Log ("inside");
 			moveTo(destination.y); //TODO: if this is changed to just 'y' the elevator moves at the correct speed
             velocity = 0;
             isMoving = false;
@@ -102,7 +104,7 @@ public class Elevator : Transportation
 
     public override bool userEntered(Customer c)
     {
-
+		destination = c.target;
         if(changeOccurred != null)
             changeOccurred();
 		return true;
@@ -110,7 +112,7 @@ public class Elevator : Transportation
 
     public override void userExited(Customer c)
     {
-
+		c.tile = destination;
         if(changeOccurred != null)
             changeOccurred();
     }
@@ -122,10 +124,13 @@ public class Elevator : Transportation
 		//do whatever
 		//Debug.Log("arrived at " + floor);
         //choose next destination
-		if (floor == World.world.HEIGHT - 1 || floor == 0)
-			up = !up;
-		floor = !up ? floor + 1 : floor - 1;
-		destination = World.world.tiles[tile.x, floor];
+
+		//if (floor == World.world.HEIGHT - 1 || floor == 0)
+		//	up = !up;
+		//floor = !up ? floor + 1 : floor - 1;
+		//destination = World.world.tiles[tile.x, floor];
+
+		destination = null;
 		tile.removeFromTile (this);
 		tile = World.world.tiles [(int)x, (int)y];
 		tile.addToTile (this);
@@ -133,12 +138,12 @@ public class Elevator : Transportation
 
 	public override bool queue(int floor, bool direction)
 	{
+		//Debug.LogError ("queue: " + floor);
 		if (destination == null)
 		{	
 			//someone has called this elevator and wants to use it
 			//TODO: handle multiple people, right now we will just go directly there
 			destination = World.world.tiles [(int)x, (int)floor];
-			//Debug.Log ("queue: " + floor);
 			return true;
 		}
 		return false;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
+using UnityEngine;
 
 public class Customer                                                                                                                         
 {      
@@ -16,7 +17,7 @@ public class Customer
     float movement = 0;
 	public string name = "";
 	bool hasCalled = false;
-	bool justgotoff = false;
+	int justgotoff = 0;
 
     float lerp(float v0, float v1, float t) {
       return (1-t)*v0 + t*v1;
@@ -25,14 +26,18 @@ public class Customer
     public float x {
         get
         {
+			if (curTransport != null)
+				return curTransport.x;
             return lerp(tile.x, nextTile.x, movement);
         } 
     }
 
     public float y {
         get
-        {
-            return lerp(tile.y, nextTile.y, movement);
+		{
+			if (curTransport != null)
+				return curTransport.y;
+			return lerp(tile.y, nextTile.y, movement);
         } 
     }
 
@@ -47,9 +52,11 @@ public class Customer
 	public void randomNextTarget()
 	{
 		System.Random rnd = new System.Random ();
-		int month = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
-		int month2 = rnd.Next (1, World.world.building.floors.Count - 1) + 1;
+		int month = rnd.Next (1, World.world.building.floors.Count - 2) + 1;
+		int month2 = rnd.Next (1, World.world.building.floors.Count - 2) + 1;
 		target = World.world.tiles [month2, month]; //set target 
+		if (target.isShaft)
+			randomNextTarget ();
 		path = null; //invalidate any paths
 		nextTile = tile; //stay in spot
 	}
@@ -68,6 +75,69 @@ public class Customer
 			movement = 0;
 		}
     }
+
+	bool getPathfinding()
+	{
+		if (justgotoff == 1)
+		{
+			justgotoff = 2;
+			path = null;
+			nextTile = null;
+		}
+
+		if (nextTile == null || nextTile == tile)
+		{
+			//if we dont have a pathfinding tile yet
+			if (path == null)
+			{
+				Debug.Log ("pathnull");
+				//generate a path from us to target
+				path = new PathFind (World.world, tile, target);
+				if (path.Length () == 0)
+				{
+					Debug.Log("Customer: Path not viable");
+					path = null;
+					return false;
+					//path not possible
+				}
+			}
+			//if our path is not null, or we have just generated a non null one, get the next tile. 
+			nextTile = path.next ();
+			if (nextTile == null)
+			{
+				nextTile = tile;
+			}
+		}
+		return true;
+	}
+
+	void getTransport()
+	{
+		Debug.Log ("getst");
+		Shaft shft = nextTile.getShaft ();
+		//We need to wait for an elevator or whatever
+		if (nextTile.hasElevator ())
+		{
+			//get in
+			Debug.Log ("eleva");
+			//Debug.LogError("ELEVATOR Here");
+			if (shft.getOnTransport (this))
+			{
+				Debug.Log("we are on elevator");
+				curTransport = shft.transport;
+				curTransport.RegisterArrivedCallback (elevatorArrived);
+			}
+		} else if (!hasCalled) //to prevent spamming the button
+		{
+
+			Debug.Log ("comgetus");
+			//tell elevator to come get us
+			hasCalled = shft.CallWaiting (this, nextTile.y, (this.tile.y - nextTile.y) == 1);
+		} else
+		{
+			Debug.Log ("ELSE" + hasCalled);
+		}
+	}
 	public void update(float deltaTime)
 	{
 		if (curTransport == null)
@@ -79,61 +149,26 @@ public class Customer
 				return;
 			}
 			//if we dont have a nother tile to goto, or we are at the tile we want to be
-			if (nextTile == null || nextTile == tile)
-			{
-				//if we dont have a pathfinding tile yet
-				if (path == null)
-				{
-					//generate a path from us to target
-					path = new PathFind (World.world, tile, target);
-					if (path.Length () == 0)
-					{
-						Console.WriteLine ("Customer: Path not viable");
-						path = null;
-						return;
-						//path not possible
-					}
-				}
-				//if our path is not null, or we have just generated a non null one, get the next tile. 
-				nextTile = path.next ();
-				if (nextTile == null)
-				{
-					nextTile = tile;
-				}
-			}
+			if (!getPathfinding ())
+				return;
 
 			//if our next tile is not a shaft/elevator
-			if (justgotoff || !nextTile.isShaft)
+			if (justgotoff == 2 || !nextTile.isShaft)
 			{
-				justgotoff = false;
+				justgotoff = 0;
 				//get the distance to the next tile (should be 1)
 				//figure out how many frames itll take to get there
 				updateMovement(deltaTime, nextTile.x, nextTile.y);
 
 			} else
 			{
-				Shaft shft = nextTile.getShaft ();
-				//We need to wait for an elevator or whatever
-				if (nextTile.hasElevator ())
-				{
-					//get in
-					//Debug.LogError("ELEVATOR Here");
-					if (shft.getOnTransport (this))
-					{
-						//Debug.Log("we are on elevator");
-						curTransport = shft.transport;
-						curTransport.RegisterArrivedCallback (elevatorArrived);
-					}
-				} else if (!hasCalled) //to prevent spamming the button
-				{
-					//tell elevator to come get us
-					hasCalled = shft.CallWaiting (this, nextTile.y, (this.tile.y - nextTile.y) == 1);
-				} else
-				{
-				}
+				Debug.Log ("gettrans");
+				//if the next tile is a shaft and we have not justgotten off an elevator TODO:justgotoff? two shafts in a row?
+				getTransport();
 			}
 		} else
 		{
+			//Debug.Log ("elevmove");
 			//we have an elevator
 			updateMovement(deltaTime, curTransport.x, curTransport.y);
 		}
@@ -149,21 +184,24 @@ public class Customer
 
 	public void elevatorArrived(int floor)
     {
+		Debug.Log ("evelarrive");
         curFloor = floor;
-		if (curFloor == target.y)
+		//if (curFloor == target.y)
 		{
-			tile = World.world.tiles[(int)curTransport.x, (int)target.y];
-			nextTile = World.world.tiles[(int)curTransport.x, (int)target.y];
+			tile = World.world.tiles[(int)curTransport.x, (int)curTransport.y];
+			nextTile = World.world.tiles[(int)curTransport.x, (int)curTransport.y];
+			movement = 0;
 			curTransport.UnregisterArrivedCallback (elevatorArrived);
 			curTransport = null;
-			justgotoff = true;
+			justgotoff = 1;
+            hasCalled = false;
 		}
 	}
 
 
     public override string ToString()
     {
-        return "cust: curFL: "+curFloor + " target: "+ target + " ("+tile.x + " " + tile.y +")";
+		return "cust: ("+tile.x + " " + tile.y +")" + " tar: "+ target;
     }
 
 }  

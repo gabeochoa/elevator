@@ -2,6 +2,8 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
+using UnityEngine;
+
 public class Shaft                                                                                                                         
 {                                                                                                                                            
                
@@ -34,6 +36,7 @@ public class Shaft
 
 	public bool CallWaiting(Customer cust, int floor, bool direction)
 	{
+		//Debug.LogError ("callwaiting " + floor);
 		//TODO: tell elevator that someone wants to get on
 		return transport.queue (floor, direction);
 	}

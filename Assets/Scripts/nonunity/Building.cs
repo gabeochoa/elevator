@@ -2,6 +2,8 @@ using System;
 using System.Collections;  
 using System.Collections.Generic;
 
+using UnityEngine;
+
 public class Building                                                                                                                         
 {                                                                                                                                            
     //Action onGameOver;
@@ -80,14 +82,16 @@ public class Building
             s.update(deltaTime);
         }
         foreach(Customer c in customers)
-        {
+		{
+			Debug.Log (c);
 			c.update(deltaTime);
-        }
+		}
+
     }   
 
     public Customer generateRandomCust()
     {
-        Random rnd = new Random();
+		System.Random rnd = new System.Random();
         int month = rnd.Next(1, floors.Count-1) + 1;
         Customer c = new Customer(World.world.tiles[1, month], 10f);
 		World.world.tiles[0,0].addToTile(c);
