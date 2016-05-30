@@ -83,7 +83,7 @@ public class Building
         }
         foreach(Customer c in customers)
 		{
-			Debug.Log (c);
+			//Debug.Log (c);
 			c.update(deltaTime);
 		}
 

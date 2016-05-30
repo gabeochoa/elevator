@@ -87,7 +87,7 @@ public class Elevator : Transportation
 		//Debug.Log (isMoving + " " + posdiff +" " + velocity);
 		if(isMoving && posdiff == 0 && Math.Abs(velocity) < 0.8f)
         {
-			Debug.Log ("inside");
+			//Debug.Log ("inside");
 			moveTo(destination.y); //TODO: if this is changed to just 'y' the elevator moves at the correct speed
             velocity = 0;
             isMoving = false;

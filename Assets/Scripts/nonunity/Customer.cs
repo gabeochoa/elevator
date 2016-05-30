@@ -90,12 +90,12 @@ public class Customer
 			//if we dont have a pathfinding tile yet
 			if (path == null)
 			{
-				Debug.Log ("pathnull");
+				//Debug.Log ("pathnull");
 				//generate a path from us to target
 				path = new PathFind (World.world, tile, target);
 				if (path.Length () == 0)
 				{
-					Debug.Log("Customer: Path not viable");
+					//Debug.Log("Customer: Path not viable");
 					path = null;
 					return false;
 					//path not possible
@@ -113,29 +113,29 @@ public class Customer
 
 	void getTransport()
 	{
-		Debug.Log ("getst");
+		//Debug.Log ("getst");
 		Shaft shft = nextTile.getShaft ();
 		//We need to wait for an elevator or whatever
 		if (nextTile.hasElevator ())
 		{
 			//get in
-			Debug.Log ("eleva");
+			//Debug.Log ("eleva");
 			//Debug.LogError("ELEVATOR Here");
 			if (shft.getOnTransport (this))
 			{
-				Debug.Log("we are on elevator");
+				//Debug.Log("we are on elevator");
 				curTransport = shft.transport;
 				curTransport.RegisterArrivedCallback (elevatorArrived);
 			}
 		} else if (!hasCalled) //to prevent spamming the button
 		{
 
-			Debug.Log ("comgetus");
+			//Debug.Log ("comgetus");
 			//tell elevator to come get us
 			hasCalled = shft.CallWaiting (this, nextTile.y, (this.tile.y - nextTile.y) == 1);
 		} else
 		{
-			Debug.Log ("ELSE" + hasCalled);
+			//Debug.Log ("ELSE" + hasCalled);
 		}
 	}
 	public void update(float deltaTime)
@@ -162,7 +162,7 @@ public class Customer
 
 			} else
 			{
-				Debug.Log ("gettrans");
+				//Debug.Log ("gettrans");
 				//if the next tile is a shaft and we have not justgotten off an elevator TODO:justgotoff? two shafts in a row?
 				getTransport();
 			}
@@ -184,7 +184,7 @@ public class Customer
 
 	public void elevatorArrived(int floor)
     {
-		Debug.Log ("evelarrive");
+		//Debug.Log ("evelarrive");
         curFloor = floor;
 		//if (curFloor == target.y)
 		{
